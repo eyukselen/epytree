@@ -4,28 +4,40 @@ import json
 class Node:
     name = None
     id = None
+    parent_id = None
     data = None
-    children = []
+    children = None
+
+    def __init__(self, name=None, data=None, children={}, idx=None, parent_id=None):
+        self.name = name
+        self.data = data
+        self.children = children
+        self.id = idx
+        self.parent_id = parent_id
+
+    def to_dict(self):
+        return {
+            'name': self.name,
+            'id': self.id,
+            'parent_id': self.parent_id,
+            'data': self.data,
+            'children': self.children,
+        }
 
 
 class Tree:
-    name = None
-    root = Node()
-    max_id = 0
-    map = {}
+    def __init__(self):
+        self.root = Node(name='Root', idx=0)
+        self.max_id = 0
+        self.map = {0: self.root}
 
-    def __init__(self, name=None):
-        self.name = name
-        self.root.name = name
-        self.root.id = 0
-        self.map[self.root.id] = self.root
-
-    def add_node(self, note, parent_id):
+    def add_node(self, node, parent_id):
         parent = self.get_node(parent_id)
         self.max_id += 1
-        note.id = self.max_id
-        parent.children.append(note)
-        self.map[note.id] = note
+        node.id = self.max_id
+        node.parent_id = parent_id
+        parent.children[node.id] = node
+        self.map[node.id] = node
 
     def del_node(self, idx):
         node = self.map.pop(idx)
@@ -34,23 +46,22 @@ class Tree:
     def get_node(self, idx):
         return self.map.get(idx, None)
 
+    def move_node(self, src_idx, tgt_idx):
+        parent_old = self.get_node(src_idx).parent_id
+        node_to_move = self.get_node(parent_old).children.pop(src_idx)
+        parent_new = self.get_node(tgt_idx)
+        parent_new.children[node_to_move.id] = node_to_move
+        node_to_move.parent_id =parent_new
 
-n = Tree()
+    def dump_to_json(self):
+        res = self.root.to_dict()
+        for idx, node in self.root.children.items():
+            res['children'][idx] = node.to_dict()
+
+        return res
+
+
+t = Tree()
 n1 = Node()
-n1.name = "note 1"
-n1.data = "data 1"
-n.add_node(n1, 0)
-
-n2 = Node()
-n2.name = "note 2"
-n2.data = "data 2"
-n.add_node(n2, 0)
-print(n.get_node(1).name)
-print(n.get_node(2).name)
-
-print('before delete:', n.root.children)
-
-n.del_node(2)
-
-print('Not found' if n.get_node(2) is None else 'found')
-print('after delete', n.root.children)
+n1.name = 'note 1'
+t.add_node(n1, 0)
