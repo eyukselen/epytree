@@ -49,3 +49,6 @@ class Tree:
         parent_new = self.get_node(tgt_idx)
         parent_new.children[node_to_move.id] = node_to_move
         node_to_move.parent_id = tgt_idx
+
+    def to_json(self):
+        return json.dumps(self.root, indent=2, cls=NodeEncoder)
