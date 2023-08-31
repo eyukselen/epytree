@@ -30,18 +30,16 @@ class TestNodeOperations(unittest.TestCase):
 
     def test_move_node(self):
         t = Tree()
-        n1 = Node()
-        n1.name = "note 1"
+        n1 = Node(name='note 1')  # id=1
         t.add_node(n1, 0)
-        n2 = Node()
-        n1.name = "note 2"
-        t.add_node(n2, 0)
-        n11 = Node()
-        n11.name = 'note 1-1'
+        n11 = Node(name='note 1-1')  # id=2
         t.add_node(n11, 1)
-        t.move_node(3, 2)
-        n2_check = t.get_node(2)
-        print(n2.children)
+        n2 = Node(name='note 2')  # id=3
+        t.add_node(n2, 0)
+        n111 = Node(name='note 1-1-1')  # id=4
+        t.add_node(n111, 2)
+        t.move_node(4, 3)
+        self.assertEqual(t.get_node(3).children[4].parent_id,3)
 
 
 if __name__ == '__main__':

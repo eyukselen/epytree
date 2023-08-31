@@ -1,4 +1,10 @@
 import json
+from json import JSONEncoder
+
+
+class NodeEncoder(JSONEncoder):
+    def default(self, o):
+        return o.__dict__
 
 
 class Node:
@@ -8,21 +14,12 @@ class Node:
     data = None
     children = None
 
-    def __init__(self, name=None, data=None, children={}, idx=None, parent_id=None):
-        self.name = name
-        self.data = data
-        self.children = children
+    def __init__(self, name=None, data=None, idx=None, parent_id=None):
         self.id = idx
         self.parent_id = parent_id
-
-    def to_dict(self):
-        return {
-            'name': self.name,
-            'id': self.id,
-            'parent_id': self.parent_id,
-            'data': self.data,
-            'children': self.children,
-        }
+        self.name = name
+        self.data = data
+        self.children = {}
 
 
 class Tree:
@@ -51,17 +48,4 @@ class Tree:
         node_to_move = self.get_node(parent_old).children.pop(src_idx)
         parent_new = self.get_node(tgt_idx)
         parent_new.children[node_to_move.id] = node_to_move
-        node_to_move.parent_id =parent_new
-
-    def dump_to_json(self):
-        res = self.root.to_dict()
-        for idx, node in self.root.children.items():
-            res['children'][idx] = node.to_dict()
-
-        return res
-
-
-t = Tree()
-n1 = Node()
-n1.name = 'note 1'
-t.add_node(n1, 0)
+        node_to_move.parent_id = tgt_idx
