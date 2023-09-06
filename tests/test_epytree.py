@@ -41,6 +41,18 @@ class TestNodeOperations(unittest.TestCase):
         t.move_node(4, 3)
         self.assertEqual(t.get_node(3).children[4].parent_id,3)
 
+    def test_save(self):
+        f1 = 'tree.json'
+        f2 = 'tree_new.json'
+        t = Tree()
+        t.load(f1)
+        t.save(f2)
+        with open(f1, 'r') as f1:
+            s1 = f1.read()
+        with open(f2, 'r') as f2:
+            s2 = f2.read()
+        self.assertEqual(s1, s2)
+
 
 if __name__ == '__main__':
     unittest.main()

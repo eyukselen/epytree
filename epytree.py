@@ -66,7 +66,6 @@ class Tree:
         self.loads(json_tree)
 
     def loads(self, js):
-        print(js)
         n = Node(name=js['name'],
                  idx=js['id'],
                  parent_id=js['parent_id'],
@@ -78,7 +77,7 @@ class Tree:
         else:
             self.map[js['id']] = n
             pn = self.get_node(js['parent_id'])
-            pn['children'][js['id']] = n
+            pn.children[js['id']] = n
         if len(js['children']) > 0:
             for k, v in js['children'].items():
                 self.loads(v)
@@ -87,6 +86,3 @@ class Tree:
 t = Tree()
 t.load('tree.json')
 print(t.to_json())
-
-
-# {'id': 0, 'parent_id': None, 'name': 'Root', 'data': None, 'children': {'1': {'id': 1, 'parent_id': 0, 'name': 'note 1', 'data': None, 'children': {'2': {'id': 2, 'parent_id': 1, 'name': 'note 1-1', 'data': None, 'children': {}}}}, '3': {'id': 3, 'parent_id': 0, 'name': 'note 2', 'data': None, 'children': {'4': {'id': 4, 'parent_id': 3, 'name': 'note 1-1-1', 'data': None, 'children': {}}}}}}
