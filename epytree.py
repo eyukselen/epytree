@@ -58,6 +58,7 @@ class Tree:
             f.write(self.to_json())
 
     def load(self, filename):
+        # TODO: need to clear previous items before loading
         # self.root = Node(name='Root', idx=0)
         # self.max_id = 0
         # self.map = {0: self.root}
